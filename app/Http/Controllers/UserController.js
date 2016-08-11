@@ -5,6 +5,10 @@ const Hash = use('Hash');
 
 class UserController {
 
+  *post (request, response) {
+    return response.json(request.data)
+  }
+
 	* show (request, response) {
 		return response.json(request.authUser);
 	}
