@@ -17,13 +17,12 @@ class UserController {
     const user = yield User.create(input);
     // Respond with updated user information
     return response.json(user.toJSON());
-    console.warn('New account ', input.email, 'created!');
+    console.warn('New account ', input.email, " ", input.github, 'created!');
   }
 
   * login (request, response) {
     // Get the input from the user
     const input = request.only('email', 'password');
-    console.warn(input.email, 'logged in!')
 
     try {
       // Find the user by email
@@ -34,7 +33,9 @@ class UserController {
       // Generate a token
       user.access_token = yield request.auth.generate(user);
 
+      console.warn(input.email, 'logged in!');
       return response.json(user.toJSON());
+
     } catch (e) {
       return response.status(401).json({ error: e.message });
     }
