@@ -1,15 +1,38 @@
 'use strict';
-
+const chalk = use('chalk');
 const User = use('App/Model/User');
+const Comment = use('App/Model/Comment');
+const Repo = use('App/Model/Repo');
 const Hash = use('Hash');
+
 
 class UserController {
 
-  *post (request, response) {
-    return response.json(request.data)
+// Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
+  * post (request, response) {
+    const input = request.only('title', 'description', 'language', 'create_date', 'orig_creator')
+    try {
+      const user =  request.authUser
+      input.user_id = user.id
+      input.github = user.github
+
+      console.log(chalk.bold.red('============================================='))
+      console.log(chalk.bold.white.bgBlue('            authUser Information             '))
+      console.log(chalk.bold.red('============================================='))
+      console.log(chalk.blue("email:         ",'%s','\ngithub account:','%s'), request.authUser.email, request.authUser.github);
+
+      const repo = yield Repo.create(input)
+
+      return response.json(repo.toJSON())
+
+    } catch (e) {
+      return response.status(401).json({ error: e.message });
+    }
   }
 
+
 	* show (request, response) {
+    console.log(request.authUser)
 		return response.json(request.authUser);
 	}
 
@@ -32,7 +55,7 @@ class UserController {
 		try {
 			// Find the user by email
 			const user = yield User.findBy('email', input.email);
-			// Verify their passwords matches & if not, let em know
+			// Verify their passwords matches
 			const verify = yield Hash.verify(input.password, user.password);
 			if (!verify) { throw new Error('Password mismatch') };
 			// Generate a token
