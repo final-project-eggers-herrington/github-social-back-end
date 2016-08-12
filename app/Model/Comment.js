@@ -9,7 +9,7 @@ class Comment extends Lucid {
   }
 
   repo () {
-    return this.belongsTo('App/Model/Repo')
+    return this.hasOne('App/Model/Repo')
   }
 
 }
