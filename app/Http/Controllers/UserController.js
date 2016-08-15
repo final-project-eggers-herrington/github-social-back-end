@@ -12,10 +12,10 @@ class UserController {
   * repo (request, response) {
     const input = request.only ('id')
     const repo = yield Database.from('repos').where('id', input.id)
-    console.log('\n==============================')
-    console.log(chalk.white.dim('USERCONTROLLER') + chalk.white.bold(' | ') + chalk.white.dim(' repo request'))
-    console.log('==============================\n')
-    console.log(chalk.red('Requested repository id: %s'),input.id);
+    console.log(chalk.white.dim('\n=============================='))
+    console.log(chalk.white.dim('USERCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('repo request'))
+    console.log(chalk.white.dim('=============================='))
+    console.log(chalk.white.bold('Requested repository id: %s\n'),input.id);
 
     return response.json(repo);
 
@@ -30,10 +30,10 @@ class UserController {
       input.user_id = user.id
       input.github = user.github
 
-      console.log(chalk.bold.red('\n=============================='))
-      console.log(chalk.bold.white('         New Repo Posted'))
-      console.log(chalk.bold.red('=============================='))
-      console.log(chalk.blue('Repo Title:    ','%s','\nemail:         ','%s','\ngithub account:','%s'), input.title,request.authUser.email, request.authUser.github);
+      console.log(chalk.dim.white('\n=============================='))
+      console.log(chalk.dim.white('         New Repo Posted'))
+      console.log(chalk.dim.white('=============================='))
+      console.log(chalk.white('Repo Title:    ','%s','\nemail:         ','%s','\ngithub account:','%s\n'), input.title,request.authUser.email, request.authUser.github);
 
       const repo = yield Repo.create(input)
 
@@ -64,7 +64,7 @@ class UserController {
 	* login (request, response) {
 		// Get the input from the user
 		const input = request.only('email', 'password');
-		console.warn(input.email, 'logged in!')
+		console.warn('\n',input.email, 'logged in!')
 
 		try {
 			// Find the user by email
