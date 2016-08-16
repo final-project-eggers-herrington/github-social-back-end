@@ -7,13 +7,13 @@ class CommentSchema extends Schema {
   up () {
     this.create('comments', (table) => {
       table.increments()
-      table.integer('poster_id').unsigned().references('id').inTable('users')
+      table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('repo_id').unsigned().references('id').inTable('repos')
-      // table.integer('comment_id').unsigned().referenced('id').inTable('comments')
+      table.integer('parent_id').unsigned().references('id').inTable('comments')
+      table.string('github')
       table.boolean('is_child')
       table.string('content')
-      table.string('description')
-      table.timestamps('post_date')
+      table.timestamps()
     })
   }
 
