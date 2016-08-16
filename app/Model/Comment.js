@@ -12,6 +12,10 @@ class Comment extends Lucid {
     return this.hasOne('App/Model/Repo')
   }
 
+  parent () {
+    this.hasOne('App/Model/Comment')
+  }
+
 }
 
 module.exports = Comment

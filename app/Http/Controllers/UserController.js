@@ -9,37 +9,50 @@ const Hash = use('Hash');
 
 class UserController {
 
-  * repo (request, response) {
-    const input = request.only ('id')
-    const repo = yield Database.from('repos').where('id', input.id)
-    console.log(chalk.white.dim('\n=============================='))
-    console.log(chalk.white.dim('USERCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('repo request'))
-    console.log(chalk.white.dim('=============================='))
-    console.log(chalk.white.bold('Requested repository id: %s\n'),input.id);
 
-    return response.json(repo);
+  // Recieves comment data from client, adds comment to database with user_id as FK (pulled from request.authUser)
+* postComment (request, response) {
+  const input = request.only('content', 'parent_id', 'repo_id')
 
+  try {
+    // Attempt to authenticate user based on auth token and subsequently create new comment
+    const user =  request.authUser
+    input.user_id = user.id
+    input.github = user.github
+    const comment = yield Comment.create(input)
+    // Begin Logging Block
+    console.log(chalk.dim.white('\n=============================='))
+    console.log(chalk.dim.white('         New Comment Posted'))
+    console.log(chalk.dim.white('=============================='))
+    console.log(chalk.white('Comment Content:','%s','\nemail:          ','%s','\ngithub account: ','%s\n'), input.content,request.authUser.email, request.authUser.github);
+    // End Logging Block
+    return response.json(comment.toJSON())
+
+} catch (e) {
+    return response.status(401).json({ error: e.message });
   }
+}
 
 
-// Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
-  * post (request, response) {
+  // Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
+  * postRepo (request, response) {
     const input = request.only('title', 'description', 'language', 'create_date', 'oc_login', 'oc_url')
+
     try {
+      // Attempt to authenticate user based on auth token and subsequently create new repo post
       const user =  request.authUser
       input.user_id = user.id
       input.github = user.github
-
+      const repo = yield Repo.create(input)
+      // Begin Logging Block
       console.log(chalk.dim.white('\n=============================='))
       console.log(chalk.dim.white('         New Repo Posted'))
       console.log(chalk.dim.white('=============================='))
       console.log(chalk.white('Repo Title:    ','%s','\nemail:         ','%s','\ngithub account:','%s\n'), input.title,request.authUser.email, request.authUser.github);
-
-      const repo = yield Repo.create(input)
-
+      // End Logging Block
       return response.json(repo.toJSON())
 
-    } catch (e) {
+  } catch (e) {
       return response.status(401).json({ error: e.message });
     }
   }
@@ -49,6 +62,7 @@ class UserController {
     console.log(request.authUser)
 		return response.json(request.authUser);
 	}
+
 
 	* store (request, response) {
 		// Get the input our user sends in & hash the password
@@ -61,10 +75,10 @@ class UserController {
 		console.warn('New account ', input.email, 'created!');
 	}
 
+
 	* login (request, response) {
 		// Get the input from the user
 		const input = request.only('email', 'password');
-		console.warn('\n',input.email, 'logged in!')
 
 		try {
 			// Find the user by email
@@ -74,6 +88,7 @@ class UserController {
 			if (!verify) { throw new Error('Password mismatch') };
 			// Generate a token
 			user.access_token = yield request.auth.generate(user);
+      console.warn('\n',input.email, 'logged in!')
 
 			return response.json(user.toJSON());
 		} catch (e) {
