@@ -1,4 +1,5 @@
 'use strict';
+const Database = use('Database')
 const chalk = use('chalk');
 const User = use('App/Model/User');
 const Comment = use('App/Model/Comment');
@@ -8,18 +9,31 @@ const Hash = use('Hash');
 
 class UserController {
 
+  * repo (request, response) {
+    const input = request.only ('id')
+    const repo = yield Database.from('repos').where('id', input.id)
+    console.log(chalk.white.dim('\n=============================='))
+    console.log(chalk.white.dim('USERCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('repo request'))
+    console.log(chalk.white.dim('=============================='))
+    console.log(chalk.white.bold('Requested repository id: %s\n'),input.id);
+
+    return response.json(repo);
+
+  }
+
+
 // Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
   * post (request, response) {
-    const input = request.only('title', 'description', 'language', 'create_date', 'orig_creator')
+    const input = request.only('title', 'description', 'language', 'create_date', 'oc_login', 'oc_url')
     try {
       const user =  request.authUser
       input.user_id = user.id
       input.github = user.github
 
-      console.log(chalk.bold.red('============================================='))
-      console.log(chalk.bold.white.bgBlue('            authUser Information             '))
-      console.log(chalk.bold.red('============================================='))
-      console.log(chalk.blue("email:         ",'%s','\ngithub account:','%s'), request.authUser.email, request.authUser.github);
+      console.log(chalk.dim.white('\n=============================='))
+      console.log(chalk.dim.white('         New Repo Posted'))
+      console.log(chalk.dim.white('=============================='))
+      console.log(chalk.white('Repo Title:    ','%s','\nemail:         ','%s','\ngithub account:','%s\n'), input.title,request.authUser.email, request.authUser.github);
 
       const repo = yield Repo.create(input)
 
@@ -50,7 +64,7 @@ class UserController {
 	* login (request, response) {
 		// Get the input from the user
 		const input = request.only('email', 'password');
-		console.warn(input.email, 'logged in!')
+		console.warn('\n',input.email, 'logged in!')
 
 		try {
 			// Find the user by email
