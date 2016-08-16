@@ -19,12 +19,16 @@ class UserController {
     const user =  request.authUser
     input.user_id = user.id
     input.github = user.github
+    console.log(input.parent_id)
+    if (input.parent_id) {input.is_child = true}
+    else {input.is_child = false}
     const comment = yield Comment.create(input)
+
     // Begin Logging Block
     console.log(chalk.dim.white('\n=============================='))
-    console.log(chalk.dim.white('         New Comment Posted'))
+    console.log(chalk.dim.white('      New Comment Posted'))
     console.log(chalk.dim.white('=============================='))
-    console.log(chalk.white('Comment Content:','%s','\nemail:          ','%s','\ngithub account: ','%s\n'), input.content,request.authUser.email, request.authUser.github);
+    console.log(chalk.white('Comment Content:','%s','\nemail:          ','%s','\ngithub account: ','%s','\nis_child:       ','%s\n'), input.content,request.authUser.email, request.authUser.github, input.is_child);
     // End Logging Block
     return response.json(comment.toJSON())
 
