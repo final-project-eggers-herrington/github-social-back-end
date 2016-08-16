@@ -10,21 +10,21 @@ const Hash = use('Hash');
 class UserController {
 
 
+  // Recieves comment data from client, adds comment to database with user_id as FK (pulled from request.authUser)
 * postComment (request, response) {
   const input = request.only('content', 'parent_id', 'repo_id')
 
   try {
-    // Attempt to authenticate user based on auth token and subsequently create new repo post
+    // Attempt to authenticate user based on auth token and subsequently create new comment
     const user =  request.authUser
     input.user_id = user.id
     input.github = user.github
-
     const comment = yield Comment.create(input)
     // Begin Logging Block
-    console.log(chalk.dim.white('\n================================='))
+    console.log(chalk.dim.white('\n=============================='))
     console.log(chalk.dim.white('         New Comment Posted'))
-    console.log(chalk.dim.white('================================='))
-    console.log(chalk.white('Comment Content:','%s','\nemail:          ','%s','\ngithub account:','%s\n'), input.content,request.authUser.email, request.authUser.github);
+    console.log(chalk.dim.white('=============================='))
+    console.log(chalk.white('Comment Content:','%s','\nemail:          ','%s','\ngithub account: ','%s\n'), input.content,request.authUser.email, request.authUser.github);
     // End Logging Block
     return response.json(comment.toJSON())
 
@@ -32,6 +32,7 @@ class UserController {
     return response.status(401).json({ error: e.message });
   }
 }
+
 
   // Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
   * postRepo (request, response) {
@@ -62,6 +63,7 @@ class UserController {
 		return response.json(request.authUser);
 	}
 
+
 	* store (request, response) {
 		// Get the input our user sends in & hash the password
 		const input = request.only('email', 'password', 'github');
@@ -73,10 +75,10 @@ class UserController {
 		console.warn('New account ', input.email, 'created!');
 	}
 
+
 	* login (request, response) {
 		// Get the input from the user
 		const input = request.only('email', 'password');
-		console.warn('\n',input.email, 'logged in!')
 
 		try {
 			// Find the user by email
@@ -86,6 +88,7 @@ class UserController {
 			if (!verify) { throw new Error('Password mismatch') };
 			// Generate a token
 			user.access_token = yield request.auth.generate(user);
+      console.warn('\n',input.email, 'logged in!')
 
 			return response.json(user.toJSON());
 		} catch (e) {
