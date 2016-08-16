@@ -8,7 +8,7 @@ const Repo = use('App/Model/Repo');
 
 class RepoController {
 
-  * repo (request, response) {
+  * repoQuery (request, response) {
     const input = request.only ('id')
     const repo = yield Database.from('repos').where('id', input.id)
 

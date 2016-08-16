@@ -9,16 +9,6 @@ const Hash = use('Hash');
 
 class UserController {
 
-// this.create('comments', (table) => {
-//   table.increments()
-//   table.integer('poster_id').unsigned().references('id').inTable('users')
-//   table.integer('repo_id').unsigned().references('id').inTable('repos')
-//   table.integer('parent_id').unsigned().references('id').inTable('comments')
-//   table.boolean('is_child')
-//   table.string('content')
-//   table.timestamps()
-// +++++++++++++++++++++++
-// github,
 
 * postComment (request, response) {
   const input = request.only('content', 'parent_id', 'repo_id')
