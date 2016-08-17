@@ -17,9 +17,9 @@ class CommentController {
     const comments = yield Database.from('comments').where('repo_id', input.repo_id)
 
     // Begin Logging Block
-    console.log(chalk.white.dim('\n=============================='))
+    console.log(chalk.white.dim('\n==================================='))
     console.log(chalk.white.dim('COMMENTCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('comment request'))
-    console.log(chalk.white.dim('=============================='))
+    console.log(chalk.white.dim('==================================='))
     console.log(chalk.white.bold('Requested comment repo_id: %s\n'),input.repo_id);
     // End Logging Block
       return response.json(comments);
