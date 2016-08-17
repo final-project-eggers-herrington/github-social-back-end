@@ -15,7 +15,7 @@ class RepoController {
 
     // Begin Logging Block
     console.log(chalk.white.dim('\n=============================='))
-    console.log(chalk.white.dim('USERCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('repo request'))
+    console.log(chalk.white.dim('REPOCONTROLLER') + chalk.white.dim(' | ') + chalk.white.dim('repo request'))
     console.log(chalk.white.dim('=============================='))
     console.log(chalk.white.bold('Requested repository id: %s\n'),input.id);
     // End Logging Block
