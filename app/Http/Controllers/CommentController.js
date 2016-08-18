@@ -27,7 +27,6 @@ class CommentController {
     } catch (e) {
 			return response.status(401).json({ error: e.message, res });
 		}
-
   }
 
 
