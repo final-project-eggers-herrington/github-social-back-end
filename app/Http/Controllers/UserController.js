@@ -1,10 +1,10 @@
 'use strict';
 const Database = use('Database')
-const chalk = use('chalk');
-const User = use('App/Model/User');
-const Comment = use('App/Model/Comment');
-const Repo = use('App/Model/Repo');
-const Hash = use('Hash');
+const chalk    = use('chalk');
+const User     = use('App/Model/User');
+const Comment  = use('App/Model/Comment');
+const Repo     = use('App/Model/Repo');
+const Hash     = use('Hash');
 
 
 class UserController {
@@ -16,9 +16,9 @@ class UserController {
 
   try {
     // Attempt to authenticate user based on auth token and subsequently create new comment
-    const user =  request.authUser
+    const user    =  request.authUser
     input.user_id = user.id
-    input.github = user.github
+    input.github  = user.github
     console.log(input.parent_id)
     if (input.parent_id) {input.is_child = true}
     else {input.is_child = false}
@@ -44,10 +44,10 @@ class UserController {
 
     try {
       // Attempt to authenticate user based on auth token and subsequently create new repo post
-      const user =  request.authUser
+      const user    =  request.authUser
       input.user_id = user.id
-      input.github = user.github
-      const repo = yield Repo.create(input)
+      input.github  = user.github
+      const repo    = yield Repo.create(input)
       // Begin Logging Block
       console.log(chalk.dim.white('\n=============================='))
       console.log(chalk.dim.white('         New Repo Posted'))
