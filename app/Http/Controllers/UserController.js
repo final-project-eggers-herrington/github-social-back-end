@@ -40,7 +40,7 @@ class UserController {
 
   // Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
   * postRepo (request, response) {
-    const input = request.only('title', 'description', 'language', 'create_date', 'oc_login', 'oc_url')
+    const input = request.only('title', 'description','user_description' , 'language', 'create_date', 'oc_login', 'oc_url')
 
     try {
       // Attempt to authenticate user based on auth token and subsequently create new repo post

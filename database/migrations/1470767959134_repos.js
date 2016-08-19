@@ -21,6 +21,7 @@ class RepoSchema extends Schema {
       table.string('oc_url')
       table.string('title')
       table.string('description')
+      table.string('user_description')
       table.string('language')
       table.string('create_date')
       table.timestamps()
