@@ -19,6 +19,7 @@ class RepoSchema extends Schema {
       table.string('github').references('github').inTable('users')
       table.string('oc_login')
       table.string('oc_url')
+      table.string('repo_url')
       table.string('title')
       table.string('description')
       table.string('user_description')
