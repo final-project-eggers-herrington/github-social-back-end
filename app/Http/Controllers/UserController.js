@@ -5,42 +5,9 @@ const User     = use('App/Model/User');
 const Comment  = use('App/Model/Comment');
 const Repo     = use('App/Model/Repo');
 const Hash     = use('Hash');
-const _        = require('lodash');
-
 
 class UserController {
 
-
-  * updateComment (request, response) {
-    let comment        = yield Comment.findBy('id', request.param('id'))
-    let user           = request.authUser
-    let edited_comment = request.only('content')
-    if (user.id === comment.user_id) {
-      comment = _.merge(comment, edited_comment)
-      yield comment.save()
-      response.json(comment.toJSON())
-    } else {
-      response.status(401).json()
-    }
-  }
-
-// * updateComment (request, response) {
-//     let comment        = yield Comment.findBy('id', request.param('id'))
-//     let edited_comment = request.only('content')
-//     console.log('comment:\n', comment, 'edited_comment\n', edited_comment)
-//     try {
-//       let user = request.authUser
-//       if (comment.user_id === user.id) {
-//         comment = _.merge(comment, edited_comment)
-//         yield comment.save()
-//         return response.json(comment.toJSON)
-//       } else {
-//         throw new Error('User is not authorized to edit this comment!')
-//       }
-//     } catch(e) {
-//       return response.status(418).json({ error: e.message });
-//     }
-//   }
 
   // Recieves comment data from client, adds comment to database with user_id as FK (pulled from request.authUser)
 * postComment (request, response) {
@@ -72,7 +39,7 @@ class UserController {
 
   // Recieves repo data from client, adds repo to database with user_id as FK (pulled from request.authUser)
   * postRepo (request, response) {
-    const input = request.only('title', 'description','user_description' , 'language', 'create_date', 'oc_login', 'oc_url', 'html_url')
+    const input = request.only('title', 'description','user_description' , 'language', 'create_date', 'oc_login', 'oc_url', 'repo_url')
 
     try {
       // Attempt to authenticate user based on auth token and subsequently create new repo post

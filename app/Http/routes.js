@@ -26,10 +26,10 @@ Route.get('/profile', 'UserController.show').middleware('auth')
 Route.post('/post/comment', 'UserController.postComment').middleware('auth')
 Route.post('/post/repo', 'UserController.postRepo').middleware('auth')
 Route.post('/repo', 'RepoController.repoQuery')
-Route.get('/allrepos', 'RepoController.allRepos')
 Route.post('/repo/comments', 'CommentController.commentQuery')
+Route.get('/allrepos', 'RepoController.allRepos')
 Route.get('/allcomments', 'CommentController.allComments')
 Route.post('/delete/comment', 'CommentController.deleteComment').middleware('auth')
 Route.post('/delete/repo', 'RepoController.deleteRepo').middleware('auth')
-Route.put('/post/comment/:id', 'UserController.updateComment').middleware('auth')
-Route.put('/post/repo/:id', 'RepoController.updateRepo').middleware('auth')
+Route.put('/post/comment/:id', 'CommentController.updateComment').middleware('auth') // edit comment
+Route.put('/post/repo/:id', 'RepoController.updateRepo').middleware('auth')          // edit repo

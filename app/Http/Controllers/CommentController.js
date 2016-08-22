@@ -2,8 +2,22 @@
 const Database = use('Database')
 const chalk    = use('chalk');
 const Comment  = use('App/Model/Comment');
+const _        = require('lodash');
 
 class CommentController {
+
+  * updateComment (request, response) {
+    let comment        = yield Comment.findBy('id', request.param('id'))
+    let user           = request.authUser
+    let edited_comment = request.only('content')
+    if (user.id === comment.user_id) {
+      comment = _.merge(comment, edited_comment)
+      yield comment.save()
+      response.json(comment.toJSON())
+    } else {
+      response.status(401).json()
+    }
+  }
 
   * deleteComment (request, response) {
     const input       = request.only ('comment_id')
