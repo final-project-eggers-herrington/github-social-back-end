@@ -11,7 +11,7 @@ class RepoController {
 
   * updateRepo (request, response) {
     let repo        = yield Repo.findBy('id', request.param('id'))
-    let user           = request.authUser
+    let user        = request.authUser
     let edited_repo = request.only('user_description')
     if (user.id === repo.user_id) {
       repo = _.merge(repo, edited_repo)
@@ -68,6 +68,7 @@ class RepoController {
       return response.json(repos);
 
   }
+  
 
 }
 
