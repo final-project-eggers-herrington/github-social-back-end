@@ -63,12 +63,31 @@ class RepoController {
 
 
   * allRepos (request, response) {
-      const repos = yield Database.table('repos').orderBy('id', 'desc')
+      const repos    = yield Database.table('repos').orderBy('id', 'desc')
+      const comments = yield Database.table('comments').orderBy('repo_id', 'desc')
+
+      // the forEach loop finds the number of comments for each repo and adds that to the 'comment_total' attribute of each repository
+      comments.forEach( function(index) {
+        var repoId = index.repo_id
+        var i      = _.findIndex(repos, {'id': repoId})
+        if (i >= 0) {
+          repos[i].comment_total += 1
+          console.log("\n+1 to 'comment_total' for repo id ", repos[i].id)
+        } else {
+          console.log("comment id ", index, "has no extant repository. (Oops)")
+        }
+      })
+      
       console.log( chalk.blue('\nAll repositories in database submitted to client\n'))
       return response.json(repos);
-
   }
-  
+
+  // * allRepos (request, response) {
+  //     const repos = yield Database.table('repos').orderBy('id', 'desc')
+  //     console.log( chalk.blue('\nAll repositories in database submitted to client\n'))
+  //     return response.json(repos);
+  //
+  // }
 
 }
 
