@@ -6,7 +6,6 @@ const Comment  = use('App/Model/Comment');
 const Repo     = use('App/Model/Repo');
 const _        = require ('lodash');
 
-
 class RepoController {
 
   * updateRepo (request, response) {
@@ -23,12 +22,12 @@ class RepoController {
   }
 
   * deleteRepo (request, response) {
-    const input       = request.only ('repo_id')
-    const user        = request.authUser
-    const repo_id     = input.repo_id
-    const search      = yield Database.table('repos').where('id', repo_id)
-    const repo        = search[0]
-    const res         = {}
+    const input   = request.only ('repo_id')
+    const user    = request.authUser
+    const repo_id = input.repo_id
+    const search  = yield Database.table('repos').where('id', repo_id)
+    const repo    = search[0]
+    const res     = {}
     res.repo = repo, res.user = user
 
     console.log(chalk.red('\nDELETE REPO REQUEST') + chalk.blue('\nuser:     ', user.github, user.id, "\nrepoId:", repo_id, "\nrepo:  ", repo.content))
@@ -73,14 +72,11 @@ class RepoController {
         if (i >= 0) {
           repos[i].comment_total += 1
           console.log("\n+1 to 'comment_total' for repo id ", repos[i].id)
-        } else {
-          console.log("comment id ", index, "has no extant repository. (Oops)")
         }
       })
-      
       console.log( chalk.blue('\nAll repositories in database submitted to client\n'))
       return response.json(repos);
-  }
+    }
 
   // * allRepos (request, response) {
   //     const repos = yield Database.table('repos').orderBy('id', 'desc')

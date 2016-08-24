@@ -41,5 +41,5 @@ Route.put('/post/comment/:id', 'CommentController.updateComment').middleware('au
 Route.put('/post/repo/:id', 'RepoController.updateRepo').middleware('auth')          // edit repo
 
 // Voting
-Route.put('/vote/repo/:id', 'VoteController.voteRepo').middleware('auth')
+Route.put('/vote/repo/:id', 'VoteController.voteRepo').middleware('auth')             //'upvote':-1 or 1
 Route.put('/vote/comment/:id', 'VoteController.voteComment').middleware('auth')
