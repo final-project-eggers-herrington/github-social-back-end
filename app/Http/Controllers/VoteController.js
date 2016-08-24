@@ -16,39 +16,62 @@ class VoteController {
     let user     = request.authUser
     const vote   = new RepoVote()
     vote.user_id = user.id
-    vote.repo_id = repo
+    vote.repo_id = repo.id
     vote.score   = input.vote
     // let votedArr = yield RepoVote.findby('user_id', user.id) // This is verification stuff (step 2)
 
-    if (input.vote === '1') {
+    // This logic detects if a vote is +1, -1 or other, and performs the correct operation (upvote, downvote or return an error)
+    if (input.vote === "1" || input.vote === 1) {
       repo.upvote_count += 1
       vote.score         = 1
       yield vote.save()
       yield repo.save()
-      console.log('+1')
-      return response.send({vote: 1})
-  } else if (input.vote === '-1') {
+      console.log('\n repo upvote ', repo.id)
+      return response.json(vote.toJSON())
+  } else if (input.vote === "-1" || input.vote === -1) {
       repo.upvote_count += -1
       vote.score         = -1
       yield vote.save()
       yield repo.save()
-      console.log('-1')
-      return response.send({vote: -1})
-  } else {
+      console.log('\n repo downvote ', repo.id)
+      return response.json(vote.toJSON())
+  }
+  else {
+    console.log(chalk.red("\nError! ") + "incorrect type or out of bounds parameter", "\n", typeof input.vote, input.vote)
       return response.status(400).send("Bad Request! Endpoint requires '1' or '-1' as a parameter for 'vote'.")
     }
   }
 
   * voteComment (request, response) {
-    let input   = request.only('vote')
-    let comment = yield Comment.findBy('id', request.param('id'))
-    let user    = request.authUser
-    let voted   = yield CommentVote.findby('user_id', user.id)
+     // Finds comment upvote is referencing, recognizing authorized user and initializing a new database entry.
+     let comment     = yield Comment.findBy('id', request.param('id'))
+     let input       = request.only('vote')
+     let user        = request.authUser
+     const vote      = new CommentVote()
+     vote.user_id    = user.id
+     vote.comment_id = comment.id
+     vote.score      = input.vote
 
-    console.log('\ncomment: ', comment)
-    console.log('\nuser: ', user)
-    console.log('\nvoted: ', voted)
-  }
+     // This logic detects if a vote is +1, -1 or other, and performs the correct operation (upvote, downvote or return an error)
+     if (input.vote === "1" || input.vote === 1) { //here might be problems
+       comment.upvote_count += 1
+       vote.score            = 1
+       yield vote.save()
+       yield comment.save()
+       console.log('\n comment upvote ', comment.id)
+       return response.json(vote.toJSON())
+   } else if (input.vote === "-1" || input.vote === -1) {
+       comment.upvote_count += -1
+       vote.score            = -1
+       yield vote.save()
+       yield comment.save()
+       console.log('\n comment downvote ', comment.id)
+       return response.json(vote.toJSON())
+   } else {
+     console.log(chalk.red("\nError! ") + "incorrect argument object type or out of bounds parameter", "\n", typeof input.vote, input.vote)
+       return response.status(400).send("Bad Request! Endpoint requires '1' or '-1' as a parameter for 'vote'.")
+     }
+   }
 
 }
 
