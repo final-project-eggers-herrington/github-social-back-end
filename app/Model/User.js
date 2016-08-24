@@ -20,6 +20,14 @@ class User extends Lucid {
     return this.hasMany('App/Model/Repo')
   }
 
+  repovotes () {
+    return this.hasMany('App/Model/RepoVote')
+  }
+
+  commentvotes () {
+    return this.hasMany('App/Model/CommentVote')
+  }
+
 }
 
 module.exports = User

@@ -12,6 +12,9 @@ class Repo extends Lucid {
     return this.hasMany('App/Model/Comment')
   }
 
+  repovote () {
+    return this.hasMany('App/Model/RepoVote')
+  }
 }
 
 module.exports = Repo
