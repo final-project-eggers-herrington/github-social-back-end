@@ -13,6 +13,7 @@ class CommentSchema extends Schema {
       table.string('github')
       table.boolean('is_child')
       table.string('content')
+      table.integer('upvote_count')
       table.timestamps()
     })
   }

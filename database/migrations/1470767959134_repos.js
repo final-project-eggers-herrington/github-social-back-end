@@ -26,6 +26,7 @@ class RepoSchema extends Schema {
       table.string('language')
       table.string('create_date')
       table.integer('comment_total')
+      table.integer('upvote_count')
       table.timestamps()
 
     })

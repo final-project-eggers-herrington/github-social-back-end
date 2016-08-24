@@ -9,18 +9,37 @@ const CommentVote = use('App/Model/CommentVote')
 
 class VoteController {
 
-  voteRepo (request, response) {
-    let repo  = yield Repo.findBy('id', request.param('id'))
-    let input = request.only('upvote')
-    let user  = request.authUser
-    if (input.upvote === 1) {
-      let vote  = yield Database.insert({repo_id: repo, user_id: user.id, score: 1 }).into('repovotes')
-    } else {
-      let vote  = yield Database.insert({repo_id: repo, user_id: user.id, score: -1 }).into('repovotes')
+ * voteRepo (request, response) {
+    // Finds repo upvote is referencing, recognizing authorized user and initializing a new database entry.
+    let repo     = yield Repo.findBy('id', request.param('id'))
+    let input    = request.only('vote')
+    let user     = request.authUser
+    const vote   = new RepoVote()
+    vote.user_id = user.id
+    vote.repo_id = repo
+    vote.score   = input.vote
+    // let votedArr = yield RepoVote.findby('user_id', user.id) // This is verification stuff (step 2)
+
+    if (input.vote === '1') {
+      repo.upvote_count += 1
+      vote.score         = 1
+      yield vote.save()
+      yield repo.save()
+      console.log('+1')
+      return response.send({vote: 1})
+  } else if (input.vote === '-1') {
+      repo.upvote_count += -1
+      vote.score         = -1
+      yield vote.save()
+      yield repo.save()
+      console.log('-1')
+      return response.send({vote: -1})
+  } else {
+      return response.status(400).send("Bad Request! Endpoint requires '1' or '-1' as a parameter for 'vote'.")
     }
   }
 
-  voteComment (request, response) {
+  * voteComment (request, response) {
     let input   = request.only('vote')
     let comment = yield Comment.findBy('id', request.param('id'))
     let user    = request.authUser
@@ -29,8 +48,6 @@ class VoteController {
     console.log('\ncomment: ', comment)
     console.log('\nuser: ', user)
     console.log('\nvoted: ', voted)
-
-
   }
 
 }
